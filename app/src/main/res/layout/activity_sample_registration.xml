@@ -31,7 +31,7 @@
                 android:singleLine="true"
                 android:maxLength="64"
                 android:textColor="#073642"
-                android:textColorHint="#859900"
+                android:textColorHint="#93a1a1"
                 android:hint="Project name"
                 android:id="@+id/etNewProj"/>
 
@@ -75,6 +75,7 @@
                     android:textColorHint="#859900"
                     android:hint="Current location provider"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#859900"
                     android:id="@+id/tvCurrentProvider"/>
 
                 <TextView
@@ -84,6 +85,7 @@
                     android:textColorHint="#859900"
                     android:hint="Last GPS date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#859900"
                     android:id="@+id/tvLastDate"/>
 
             <LinearLayout
@@ -96,7 +98,8 @@
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:text="Latitude: "
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#859900" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -105,6 +108,7 @@
                     android:textColorHint="#859900"
                     android:hint="Last GPS latitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#859900"
                     android:id="@+id/tvCurrentLatitude"/>
             </LinearLayout>
 
@@ -118,7 +122,8 @@
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:text="Longitude: "
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#859900" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -127,6 +132,7 @@
                     android:textColorHint="#859900"
                     android:hint="Last GPS longitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#859900"
                     android:id="@+id/tvCurrentLongitude"/>
             </LinearLayout>
 
@@ -157,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:editable="false"
                         android:textColor="#073642"
-                        android:textColorHint="#859900"
+                        android:textColorHint="#93a1a1"
                         android:hint="Next ID"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/tvNextId"/>
@@ -169,7 +175,7 @@
                     android:singleLine="true"
                     android:maxLength="64"
                     android:textColor="#073642"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#93a1a1"
                     android:hint="Sample type"
                     android:id="@+id/etNextSampleType"/>
 
@@ -179,7 +185,7 @@
                     android:singleLine="true"
                     android:maxLength="128"
                     android:textColor="#073642"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#93a1a1"
                     android:hint="Sample comment"
                     android:id="@+id/etNextComment"/>
             </LinearLayout>
