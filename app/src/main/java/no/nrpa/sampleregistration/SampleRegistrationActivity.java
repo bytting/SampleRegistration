@@ -1,3 +1,18 @@
+/*
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+// CONTRIBUTORS AND COPYRIGHT HOLDERS (c) 2015:
+// Dag Robøle (dag D0T robole AT gmail D0T com)
+
 package no.nrpa.sampleregistration;
 
 import android.Manifest;
@@ -14,6 +29,8 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannedString;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -60,8 +77,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private TextView tvCurrLat;
     private TextView tvCurrLon;
     private TextView tvNextID;
-    private EditText etNewSampleType;
-    private EditText etNewComment;
+    private EditText etNextSampleType;
+    private EditText etNextComment;
 
     File appDir;
     int nextId;
@@ -114,9 +131,9 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         tvCurrGPSDate = (TextView) findViewById(R.id.tvLastDate);
         tvCurrLat = (TextView) findViewById(R.id.tvCurrentLatitude);
         tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
-        tvNextID = (TextView)findViewById(R.id.etNewId);
-        etNewSampleType = (EditText)findViewById(R.id.etNewSampleType);
-        etNewComment = (EditText)findViewById(R.id.etNewComment);
+        tvNextID = (TextView)findViewById(R.id.tvNextId);
+        etNextSampleType = (EditText)findViewById(R.id.etNextSampleType);
+        etNextComment = (EditText)findViewById(R.id.etNextComment);
 
         // Initialize location manager
         locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -179,6 +196,14 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private View.OnClickListener btnNextID_onClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            String sampleType = etNextSampleType.getText().toString().trim();
+            if(sampleType.length() < 1)
+            {
+                Toast.makeText(SampleRegistrationActivity.this, Html.fromHtml("<font color='#ff8888' ><b>Field 'Sample type' is required</b></font>"), Toast.LENGTH_LONG).show();
+                return;
+            }
+
             File file = new File (appDir, tvProjName.getText().toString() + ".txt");
             //Log.i("sampleregistration", "Writing to " + file.getAbsolutePath());
             try {
@@ -192,8 +217,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 String currLat = tvCurrLat.getText().toString();
                 String currLon = tvCurrLon.getText().toString();
                 String nextID = tvNextID.getText().toString();
-                String sampleType = etNewSampleType.getText().toString();
-                String sampleComment = etNewComment.getText().toString();
+                String sampleComment = etNextComment.getText().toString();
 
                 String line = nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + sampleType + "|" + sampleComment + "\n";
                 out.write(line.getBytes());
@@ -236,7 +260,20 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             EditText et = (EditText) v;
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
 
-                String strNewProj = et.getText().toString();
+                String strNewProj = et.getText().toString().trim();
+                if(strNewProj.length() < 1)
+                {
+                    Toast.makeText(SampleRegistrationActivity.this, Html.fromHtml("<font color='#ff8888' ><b>Field 'Project name' is required</b></font>"), Toast.LENGTH_LONG).show();
+                    return true;
+                }
+
+                for(int i=0; i<adapter.getCount(); i++) {
+                    String s = (String)adapter.getItem(i);
+                    if(s.equalsIgnoreCase(strNewProj)) {
+                        Toast.makeText(SampleRegistrationActivity.this, Html.fromHtml("<font color='#ff8888' ><b>Project already exists</b></font>"), Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                }
 
                 File file = new File (appDir, strNewProj + ".txt");
                 try {
@@ -264,7 +301,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         super.onResume();
         if(!providerEnabled)
             return;
-        locManager.requestLocationUpdates(locProvider, 400, 1, this);
+        locManager.requestLocationUpdates(locProvider, 10000, 3, this);
     }
 
     /* Remove the locationlistener updates when Activity is paused */

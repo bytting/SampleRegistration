@@ -30,6 +30,9 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:maxLength="64"
+                android:textColor="#073642"
+                android:textColorHint="#859900"
+                android:hint="Project name"
                 android:id="@+id/etNewProj"/>
 
             <ListView
@@ -52,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:editable="false"
-                    android:textColor="#002b36"
+                    android:textColor="#073642"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/tvProjName"/>
 
@@ -83,23 +86,49 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:id="@+id/tvLastDate"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:text="Latitude: "
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:textColorHint="#859900"
                     android:hint="Last GPS latitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:id="@+id/tvCurrentLatitude"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:text="Longitude: "
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:textColorHint="#859900"
                     android:hint="Last GPS longitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:id="@+id/tvCurrentLongitude"/>
+            </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -110,15 +139,29 @@
                     android:textColor="#0054BB"
                     android:text="Next sample information"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:textColor="#2aa198"
-                    android:textColorHint="#859900"
-                    android:hint="New ID"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/etNewId"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColor="#073642"
+                        android:text="Sample ID: "
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColor="#073642"
+                        android:textColorHint="#859900"
+                        android:hint="Next ID"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:id="@+id/tvNextId"/>
+                </LinearLayout>
 
                 <EditText
                     android:layout_width="match_parent"
@@ -128,7 +171,7 @@
                     android:textColor="#073642"
                     android:textColorHint="#859900"
                     android:hint="Sample type"
-                    android:id="@+id/etNewSampleType"/>
+                    android:id="@+id/etNextSampleType"/>
 
                 <EditText
                     android:layout_width="match_parent"
@@ -138,8 +181,7 @@
                     android:textColor="#073642"
                     android:textColorHint="#859900"
                     android:hint="Sample comment"
-                    android:id="@+id/etNewComment"/>
-
+                    android:id="@+id/etNextComment"/>
             </LinearLayout>
 
             <Button
