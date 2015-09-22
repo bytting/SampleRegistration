@@ -250,7 +250,6 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 String currLon = tvCurrLon.getText().toString();
                 String nextID = tvNextID.getText().toString();
                 String sampleComment = etNextComment.getText().toString();
-
                 String line = nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + sampleType + "|" + sampleComment + "\n";
                 out.write(line.getBytes());
                 out.flush();
@@ -260,8 +259,6 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
                 nextId++;
                 tvNextID.setText(String.valueOf(nextId));
-
-                out.close();
 
             } catch (Exception e) {
                 Toast.makeText(SampleRegistrationActivity.this, ErrorString(e.getMessage()), Toast.LENGTH_LONG).show();
@@ -280,7 +277,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 nextId = lnr.getLineNumber();
                 lnr.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                Toast.makeText(SampleRegistrationActivity.this, ErrorString(e.getMessage()), Toast.LENGTH_LONG).show();
             }
 
             tvNextID.setText(String.valueOf(nextId));
@@ -317,7 +314,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     out.flush();
                     out.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(SampleRegistrationActivity.this, ErrorString(e.getMessage()), Toast.LENGTH_LONG).show();
                 }
 
                 populateProjects();
