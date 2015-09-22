@@ -32,13 +32,11 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.SpannedString;
-import android.util.Log;
+import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -65,115 +63,115 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
     private ViewSwitcher switcher;
     private ListView lstProj;
-
     private ArrayList<String> items;
     private ListAdapter adapter;
-
-    TextView tvProjName;
-
     private LocationManager locManager;
     private String locProvider;
     private boolean providerEnabled;
-    private TextView tvCurrProvider;
-    private TextView tvCurrGPSDate;
-    private TextView tvCurrLat;
-    private TextView tvCurrLon;
-    private TextView tvNextID;
-    private EditText etNextSampleType;
-    private EditText etNextComment;
-
+    private TextView tvProjName, tvCurrProvider, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvNextID;
+    private EditText etNextSampleType, etNextComment;
     private File appDir;
     private int nextId;
     private long syncFrequency;
     private float syncDistance;
+
+    private Spanned ErrorString(String s) {
+        return Html.fromHtml("<font color='#ff8888' ><b>" + s + "</b></font>");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_registration);
 
-        getWindow().getDecorView().setBackgroundColor(Color.parseColor("#fdf6e3"));
+        try {
+            //getWindow().getDecorView().setBackgroundColor(Color.parseColor("#fdf6e3"));
 
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setLogo(R.mipmap.ic_launcher);
-            actionBar.setDisplayUseLogoEnabled(true);
-        }
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null) {
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setLogo(R.mipmap.ic_launcher);
+                actionBar.setDisplayUseLogoEnabled(true);
+            }
 
-        if(!isExternalStorageWritable())
-        {
-            Toast.makeText(this, "Access to external storage denied", Toast.LENGTH_SHORT).show();
-            exitApp();
-        }
+            if(!isExternalStorageWritable())
+            {
+                Toast.makeText(this, "Access to external storage denied", Toast.LENGTH_SHORT).show();
+                exitApp();
+            }
 
-        appDir = getStorageDir("sampleregistration");
+            appDir = getStorageDir("sampleregistration");
 
-        switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher);
-        switcher.setInAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_in_left));
-        switcher.setOutAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_out_right));
+            switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher);
+            switcher.setInAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_in_left));
+            switcher.setOutAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_out_right));
 
-        EditText etNewProj = (EditText) findViewById(R.id.etNewProj);
-        etNewProj.setOnKeyListener(etNewProj_onKey);
+            EditText etNewProj = (EditText) findViewById(R.id.etNewProj);
+            etNewProj.setOnKeyListener(etNewProj_onKey);
 
-        items = new ArrayList();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+            items = new ArrayList<String>();
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 
-        lstProj = (ListView) findViewById(R.id.listView);
-        lstProj.setOnItemClickListener(lstProj_onItemClick);
+            lstProj = (ListView) findViewById(R.id.listView);
+            lstProj.setOnItemClickListener(lstProj_onItemClick);
 
-        populateProjects();
+            populateProjects();
 
-        Button btnBack = (Button) findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(btnBack_onClick);
+            Button btnBack = (Button) findViewById(R.id.btnBack);
+            btnBack.setOnClickListener(btnBack_onClick);
 
-        Button btnNextID = (Button) findViewById(R.id.btnNextId);
-        btnNextID.setOnClickListener(btnNextID_onClick);
+            Button btnNextID = (Button) findViewById(R.id.btnNextId);
+            btnNextID.setOnClickListener(btnNextID_onClick);
 
-        tvProjName = (TextView) findViewById(R.id.tvProjName);
-        tvCurrProvider = (TextView) findViewById(R.id.tvCurrentProvider);
-        tvCurrGPSDate = (TextView) findViewById(R.id.tvLastDate);
-        tvCurrLat = (TextView) findViewById(R.id.tvCurrentLatitude);
-        tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
-        tvNextID = (TextView)findViewById(R.id.tvNextId);
-        etNextSampleType = (EditText)findViewById(R.id.etNextSampleType);
-        etNextComment = (EditText)findViewById(R.id.etNextComment);
+            tvProjName = (TextView) findViewById(R.id.tvProjName);
+            tvCurrProvider = (TextView) findViewById(R.id.tvCurrentProvider);
+            tvCurrGPSDate = (TextView) findViewById(R.id.tvLastDate);
+            tvCurrLat = (TextView) findViewById(R.id.tvCurrentLatitude);
+            tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
+            tvNextID = (TextView)findViewById(R.id.tvNextId);
+            etNextSampleType = (EditText)findViewById(R.id.etNextSampleType);
+            etNextComment = (EditText)findViewById(R.id.etNextComment);
 
-        // Load preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String strSyncFrequency = prefs.getString("sync_frequency", "3000");
-        String strSyncDistance = prefs.getString("sync_distance", "2");
-        syncFrequency = Long.parseLong(strSyncFrequency);
-        syncDistance = Float.parseFloat(strSyncDistance);
-        prefs.registerOnSharedPreferenceChangeListener(preferenceListener);
-        //Toast.makeText(this, "Sync freq: " + Long.toString(syncFrequency) + " Sync dist: " + Float.toString(syncDistance), Toast.LENGTH_SHORT).show();
+            // Load preferences
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String strSyncFrequency = prefs.getString("sync_frequency", "3000");
+            String strSyncDistance = prefs.getString("sync_distance", "2");
+            syncFrequency = Long.parseLong(strSyncFrequency);
+            syncDistance = Float.parseFloat(strSyncDistance);
+            prefs.registerOnSharedPreferenceChangeListener(preferenceListener);
+            //Toast.makeText(this, "Sync freq: " + Long.toString(syncFrequency) + " Sync dist: " + Float.toString(syncDistance), Toast.LENGTH_SHORT).show();
 
-        // Initialize location manager
-        locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        providerEnabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!providerEnabled) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
+            // Initialize location manager
+            locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            providerEnabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (!providerEnabled) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
 
-        Criteria criteria = new Criteria();
-        locProvider = locManager.getBestProvider(criteria, false);
-        if(locProvider == null) {
-            Toast.makeText(this, "No location provider available", Toast.LENGTH_SHORT).show();
-            exitApp();
-            return;
-        }
+            Criteria criteria = new Criteria();
+            locProvider = locManager.getBestProvider(criteria, false);
+            if(locProvider == null) {
+                Toast.makeText(this, "No location provider available", Toast.LENGTH_SHORT).show();
+                exitApp();
+                return;
+            }
 
-        Location location = locManager.getLastKnownLocation(locProvider);
+            Location location = locManager.getLastKnownLocation(locProvider);
 
-        if (location != null) {
-            tvCurrProvider.setText("Provider: " + locProvider);
-            onLocationChanged(location);
-        } else {
-            tvCurrProvider.setText("Provider not available");
-            tvCurrGPSDate.setText("Date not available");
-            tvCurrLat.setText("Location not available");
-            tvCurrLon.setText("Location not available");
+            if (location != null) {
+                tvCurrProvider.setText("Provider: " + locProvider);
+                onLocationChanged(location);
+            } else {
+                tvCurrProvider.setText("Provider not available");
+                tvCurrGPSDate.setText("Date not available");
+                tvCurrLat.setText("Location not available");
+                tvCurrLon.setText("Location not available");
+            }
+        } catch(SecurityException ex) {
+            Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_LONG).show();
+        } catch(Exception ex) {
+            Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -203,15 +201,20 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("sync_frequency")) {
-                String strSyncFrequency = sharedPreferences.getString("sync_frequency", "3000");
-                syncFrequency = Long.parseLong(strSyncFrequency);
-                locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
 
-            } else if(key.equals("sync_distance")) {
-                String strSyncDistance = sharedPreferences.getString("sync_distance", "2");
-                syncDistance = Float.parseFloat(strSyncDistance);
-                locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
+            try {
+                if(key.equals("sync_frequency")) {
+                    String strSyncFrequency = sharedPreferences.getString("sync_frequency", "3000");
+                    syncFrequency = Long.parseLong(strSyncFrequency);
+                    locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
+
+                } else if(key.equals("sync_distance")) {
+                    String strSyncDistance = sharedPreferences.getString("sync_distance", "2");
+                    syncDistance = Float.parseFloat(strSyncDistance);
+                    locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
+                }
+            } catch(SecurityException ex) {
+                Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -227,16 +230,15 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         @Override
         public void onClick(View v) {
 
-            String sampleType = etNextSampleType.getText().toString().trim();
-            if(sampleType.length() < 1)
-            {
-                Toast.makeText(SampleRegistrationActivity.this, Html.fromHtml("<font color='#ff8888' ><b>Field 'Sample type' is required</b></font>"), Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            File file = new File (appDir, tvProjName.getText().toString() + ".txt");
-            //Log.i("sampleregistration", "Writing to " + file.getAbsolutePath());
             try {
+                String sampleType = etNextSampleType.getText().toString().trim();
+                if(sampleType.length() < 1)
+                {
+                    Toast.makeText(SampleRegistrationActivity.this, ErrorString("Field 'Sample type' is required"), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                File file = new File (appDir, tvProjName.getText().toString() + ".txt");
                 FileOutputStream out = new FileOutputStream(file, true);
 
                 TimeZone tz = TimeZone.getTimeZone("UTC");
@@ -258,8 +260,11 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
                 nextId++;
                 tvNextID.setText(String.valueOf(nextId));
+
+                out.close();
+
             } catch (Exception e) {
-                e.printStackTrace();
+                Toast.makeText(SampleRegistrationActivity.this, ErrorString(e.getMessage()), Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -269,9 +274,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             tvProjName.setText(String.valueOf(parent.getItemAtPosition(position)));
 
-            LineNumberReader lnr = null;
             try {
-                lnr = new LineNumberReader(new FileReader(new File(appDir, tvProjName.getText().toString() + ".txt")));
+                LineNumberReader lnr = new LineNumberReader(new FileReader(new File(appDir, tvProjName.getText().toString() + ".txt")));
                 lnr.skip(Long.MAX_VALUE);
                 nextId = lnr.getLineNumber();
                 lnr.close();
@@ -293,14 +297,14 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 String strNewProj = et.getText().toString().trim();
                 if(strNewProj.length() < 1)
                 {
-                    Toast.makeText(SampleRegistrationActivity.this, Html.fromHtml("<font color='#ff8888' ><b>Field 'Project name' is required</b></font>"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(SampleRegistrationActivity.this, ErrorString("Field 'Project name' is required"), Toast.LENGTH_LONG).show();
                     return true;
                 }
 
                 for(int i=0; i<adapter.getCount(); i++) {
                     String s = (String)adapter.getItem(i);
                     if(s.equalsIgnoreCase(strNewProj)) {
-                        Toast.makeText(SampleRegistrationActivity.this, Html.fromHtml("<font color='#ff8888' ><b>Project already exists</b></font>"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SampleRegistrationActivity.this, ErrorString("Project already exists"), Toast.LENGTH_LONG).show();
                         return true;
                     }
                 }
@@ -329,20 +333,32 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     @Override
     protected void onResume() {
         super.onResume();
-        if(!providerEnabled)
+        if(!providerEnabled) {
+            Toast.makeText(SampleRegistrationActivity.this, ErrorString("No provider enabled"), Toast.LENGTH_SHORT).show();
             return;
+        }
 
-        locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, this);
+        try {
+            locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, this);
+        } catch(SecurityException ex) {
+            Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /* Remove the locationlistener updates when Activity is paused */
     @Override
     protected void onPause() {
         super.onPause();
-        if(!providerEnabled)
+        if(!providerEnabled) {
+            Toast.makeText(SampleRegistrationActivity.this, ErrorString("No provider enabled"), Toast.LENGTH_SHORT).show();
             return;
+        }
 
-        locManager.removeUpdates(this);
+        try {
+            locManager.removeUpdates(this);
+        } catch(SecurityException ex) {
+            Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -382,9 +398,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
     public File getStorageDir(String appname) {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), appname);
-        if (!file.mkdirs()) {
-            Log.i("sampleregistration", "Directory not created");
-        }
+        file.mkdirs();
         return file;
     }
 

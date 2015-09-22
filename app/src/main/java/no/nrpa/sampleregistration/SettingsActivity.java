@@ -19,7 +19,6 @@ import android.text.TextUtils;
 
 import java.util.List;
 
-
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -32,7 +31,6 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity {
-
 
     /**
      * {@inheritDoc}
@@ -50,7 +48,6 @@ public class SettingsActivity extends PreferenceActivity {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
-
 
     /**
      * {@inheritDoc}
@@ -77,10 +74,7 @@ public class SettingsActivity extends PreferenceActivity {
                 int index = listPreference.findIndexOfValue(stringValue);
 
                 // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
+                preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
 
             } else {
                 // For all other preferences, set the summary to the value's
