@@ -16,7 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package no.nrpa.sampleregistration;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -80,8 +82,10 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private EditText etNextSampleType;
     private EditText etNextComment;
 
-    File appDir;
-    int nextId;
+    private File appDir;
+    private int nextId;
+    private long syncFrequency;
+    private float syncDistance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,15 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         etNextSampleType = (EditText)findViewById(R.id.etNextSampleType);
         etNextComment = (EditText)findViewById(R.id.etNextComment);
 
+        // Load preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String strSyncFrequency = prefs.getString("sync_frequency", "3000");
+        String strSyncDistance = prefs.getString("sync_distance", "2");
+        syncFrequency = Long.parseLong(strSyncFrequency);
+        syncDistance = Float.parseFloat(strSyncDistance);
+        prefs.registerOnSharedPreferenceChangeListener(preferenceListener);
+        //Toast.makeText(this, "Sync freq: " + Long.toString(syncFrequency) + " Sync dist: " + Float.toString(syncDistance), Toast.LENGTH_SHORT).show();
+
         // Initialize location manager
         locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         providerEnabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -180,11 +193,28 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if(key.equals("sync_frequency")) {
+                String strSyncFrequency = sharedPreferences.getString("sync_frequency", "3000");
+                syncFrequency = Long.parseLong(strSyncFrequency);
+                locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
+
+            } else if(key.equals("sync_distance")) {
+                String strSyncDistance = sharedPreferences.getString("sync_distance", "2");
+                syncDistance = Float.parseFloat(strSyncDistance);
+                locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
+            }
+        }
+    };
 
     private View.OnClickListener btnBack_onClick = new View.OnClickListener() {
         @Override
@@ -301,7 +331,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         super.onResume();
         if(!providerEnabled)
             return;
-        locManager.requestLocationUpdates(locProvider, 10000, 3, this);
+
+        locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, this);
     }
 
     /* Remove the locationlistener updates when Activity is paused */
@@ -310,6 +341,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         super.onPause();
         if(!providerEnabled)
             return;
+
         locManager.removeUpdates(this);
     }
 
