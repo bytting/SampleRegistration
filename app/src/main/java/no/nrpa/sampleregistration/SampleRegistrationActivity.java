@@ -68,10 +68,11 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private LocationManager locManager;
     private String locProvider;
     private boolean providerEnabled;
-    private TextView tvProjName, tvCurrProvider, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvNextID;
-    private EditText etNextSampleType, etNextComment;
+    private TextView tvProjName, tvCurrProvider, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvDataID, tvNextID;
+    private EditText etNextSampleType, etStation, etNextComment;
     private File appDir;
     private int nextId;
+    private String dataId;
     private long syncFrequency;
     private float syncDistance;
 
@@ -128,18 +129,23 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             tvCurrGPSDate = (TextView) findViewById(R.id.tvLastDate);
             tvCurrLat = (TextView) findViewById(R.id.tvCurrentLatitude);
             tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
+            tvDataID = (TextView)findViewById(R.id.tvDataId);
             tvNextID = (TextView)findViewById(R.id.tvNextId);
             etNextSampleType = (EditText)findViewById(R.id.etNextSampleType);
+            etStation = (EditText)findViewById(R.id.etStation);
             etNextComment = (EditText)findViewById(R.id.etNextComment);
 
             // Load preferences
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            dataId = prefs.getString("data_id", "");
             String strSyncFrequency = prefs.getString("sync_frequency", "3000");
             String strSyncDistance = prefs.getString("sync_distance", "2");
             syncFrequency = Long.parseLong(strSyncFrequency);
             syncDistance = Float.parseFloat(strSyncDistance);
             prefs.registerOnSharedPreferenceChangeListener(preferenceListener);
             //Toast.makeText(this, "Sync freq: " + Long.toString(syncFrequency) + " Sync dist: " + Float.toString(syncDistance), Toast.LENGTH_SHORT).show();
+
+            tvDataID.setText(dataId);
 
             // Initialize location manager
             locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -212,6 +218,9 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     String strSyncDistance = sharedPreferences.getString("sync_distance", "2");
                     syncDistance = Float.parseFloat(strSyncDistance);
                     locManager.requestLocationUpdates(locProvider, syncFrequency, syncDistance, SampleRegistrationActivity.this);
+                } else if(key.equals("data_id")) {
+                    dataId = sharedPreferences.getString("data_id", "");
+                    tvDataID.setText(dataId);
                 }
             } catch(SecurityException ex) {
                 Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_SHORT).show();
@@ -248,9 +257,11 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
                 String currLat = tvCurrLat.getText().toString();
                 String currLon = tvCurrLon.getText().toString();
+                String dataID = tvDataID.getText().toString();
                 String nextID = tvNextID.getText().toString();
+                String station = etStation.getText().toString();
                 String sampleComment = etNextComment.getText().toString();
-                String line = nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + sampleType + "|" + sampleComment + "\n";
+                String line = dataId + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + sampleComment + "\n";
                 out.write(line.getBytes());
                 out.flush();
                 out.close();
