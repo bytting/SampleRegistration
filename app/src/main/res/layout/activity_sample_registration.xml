@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:editable="false"
-                    android:layout_marginTop="70px"
+                    android:layout_marginTop="8dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0054BB"
                     android:text="Last GPS information received"/>
@@ -139,7 +139,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="70px"
+                    android:layout_marginTop="8dp"
                     android:editable="false"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0054BB"
@@ -167,12 +167,6 @@
                         android:hint="Phone ID"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/tvDataId"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -205,20 +199,53 @@
                     android:id="@+id/etNextSampleType"/>
 
                 <EditText
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:maxLength="64"
+                    android:minWidth="100dp"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
                     android:hint="Station"
+                    android:nextFocusDown="@+id/etMeasurementValue"
                     android:id="@+id/etStation"/>
 
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:maxLength="64"
+                        android:minWidth="100dp"
+                        android:textColor="#073642"
+                        android:textColorHint="#93a1a1"
+                        android:hint="Value"
+                        android:nextFocusDown="@+id/etMeasurementUnit"
+                        android:id="@+id/etMeasurementValue"/>
+
+                    <AutoCompleteTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:maxLength="64"
+                        android:minWidth="100dp"
+                        android:textColor="#073642"
+                        android:textColorHint="#93a1a1"
+                        android:hint="Unit"
+                        android:imeOptions="actionNext"
+                        android:id="@+id/etMeasurementUnit"/>
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:maxLength="128"
+                    android:minWidth="100dp"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
                     android:hint="Comment"

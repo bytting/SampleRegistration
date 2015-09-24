@@ -72,8 +72,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private String locProvider;
     private boolean providerEnabled;
     private TextView tvProjName, tvCurrProvider, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvDataID, tvNextID;
-    private EditText etStation, etNextComment;
-    private AutoCompleteTextView etNextSampleType;
+    private EditText etStation, etMeasurementValue, etNextComment;
+    private AutoCompleteTextView etNextSampleType, etMeasurementUnit;
     private File projDir, cfgDir;
     private int nextId;
     private String dataId;
@@ -142,6 +142,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             tvNextID = (TextView)findViewById(R.id.tvNextId);
             etNextSampleType = (AutoCompleteTextView)findViewById(R.id.etNextSampleType);
             etStation = (EditText)findViewById(R.id.etStation);
+            etMeasurementValue = (EditText)findViewById(R.id.etMeasurementValue);
+            etMeasurementUnit = (AutoCompleteTextView)findViewById(R.id.etMeasurementUnit);
             etNextComment = (EditText)findViewById(R.id.etNextComment);
 
             ArrayList<String> sampleTypes = new ArrayList<String>();
@@ -156,6 +158,20 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sampleTypes);
                 etNextSampleType.setAdapter(adapter);
+            }
+
+            ArrayList<String> units = new ArrayList<String>();
+            file = new File (cfgDir, "units.txt");
+            if(file.exists()) {
+                String line;
+                BufferedReader buf = new BufferedReader(new FileReader(file));
+                while ((line = buf.readLine()) != null) {
+                    units.add(line);
+                }
+                buf.close();
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, units);
+                etMeasurementUnit.setAdapter(adapter);
             }
 
             // Load preferences
@@ -270,21 +286,37 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     return;
                 }
 
-                File file = new File (projDir, tvProjName.getText().toString() + ".txt");
-                FileOutputStream out = new FileOutputStream(file, true);
-
+                float fValue = 0f;
                 TimeZone tz = TimeZone.getTimeZone("UTC");
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
                 df.setTimeZone(tz);
                 String strDateISO = df.format(new Date());
 
-                String currLat = tvCurrLat.getText().toString();
-                String currLon = tvCurrLon.getText().toString();
-                String dataID = tvDataID.getText().toString();
-                String nextID = tvNextID.getText().toString();
-                String station = etStation.getText().toString();
-                String sampleComment = etNextComment.getText().toString();
-                String line = dataId + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + sampleComment + "\n";
+                String currLat = tvCurrLat.getText().toString().trim();
+                String currLon = tvCurrLon.getText().toString().trim();
+                String dataID = tvDataID.getText().toString().trim();
+                String nextID = tvNextID.getText().toString().trim();
+                String station = etStation.getText().toString().trim();
+                String value = etMeasurementValue.getText().toString().trim();
+                String unit = etMeasurementUnit.getText().toString().trim();
+                if(value.length() > 0) {
+                    try {
+                        fValue = Float.parseFloat(value);
+                    } catch (NumberFormatException ex) {
+                        Toast.makeText(SampleRegistrationActivity.this, ErrorString("Invalid format on value"), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if(unit.length() < 1) {
+                        Toast.makeText(SampleRegistrationActivity.this, ErrorString("Missing unit"), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                String sampleComment = etNextComment.getText().toString().trim();
+                String line = dataID + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + sampleComment + "\n";
+
+                File file = new File (projDir, tvProjName.getText().toString() + ".txt");
+                FileOutputStream out = new FileOutputStream(file, true);
                 out.write(line.getBytes());
                 out.flush();
                 out.close();
