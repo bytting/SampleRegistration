@@ -1,9 +1,9 @@
 <resources>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="pref_header_data_id">App Settings</string>
+    <string name="pref_header_data_id">General Settings</string>
 
-    <string name="pref_title_data_id">ID</string>
+    <string name="pref_title_data_id">Phone ID</string>
 
     <string name="pref_header_data_sync">GPS Settings</string>
 

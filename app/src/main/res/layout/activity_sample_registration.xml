@@ -193,7 +193,7 @@
                         android:id="@+id/tvNextId"/>
                 </LinearLayout>
 
-                <EditText
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
@@ -201,6 +201,7 @@
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
                     android:hint="Sample type"
+                    android:imeOptions="actionNext"
                     android:id="@+id/etNextSampleType"/>
 
                 <EditText
@@ -220,7 +221,7 @@
                     android:maxLength="128"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
-                    android:hint="Sample comment"
+                    android:hint="Comment"
                     android:id="@+id/etNextComment"/>
             </LinearLayout>
 

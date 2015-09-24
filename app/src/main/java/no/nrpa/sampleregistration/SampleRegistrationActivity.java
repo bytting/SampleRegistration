@@ -19,6 +19,7 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -48,6 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -69,8 +72,9 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private String locProvider;
     private boolean providerEnabled;
     private TextView tvProjName, tvCurrProvider, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvDataID, tvNextID;
-    private EditText etNextSampleType, etStation, etNextComment;
-    private File appDir;
+    private EditText etStation, etNextComment;
+    private AutoCompleteTextView etNextSampleType;
+    private File projDir, cfgDir;
     private int nextId;
     private String dataId;
     private long syncFrequency;
@@ -79,6 +83,10 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private Spanned ErrorString(String s) {
         return Html.fromHtml("<font color='#ff8888' ><b>" + s + "</b></font>");
     }
+
+    private static final String[] COUNTRIES = new String[] {
+            "Belgium", "France", "Italy", "Germany", "Spain"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +109,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 exitApp();
             }
 
-            appDir = getStorageDir("sampleregistration");
+            projDir = getProjectDir();
+            cfgDir = getConfigDir();
 
             switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher);
             switcher.setInAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_in_left));
@@ -131,9 +140,23 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
             tvDataID = (TextView)findViewById(R.id.tvDataId);
             tvNextID = (TextView)findViewById(R.id.tvNextId);
-            etNextSampleType = (EditText)findViewById(R.id.etNextSampleType);
+            etNextSampleType = (AutoCompleteTextView)findViewById(R.id.etNextSampleType);
             etStation = (EditText)findViewById(R.id.etStation);
             etNextComment = (EditText)findViewById(R.id.etNextComment);
+
+            ArrayList<String> sampleTypes = new ArrayList<String>();
+            File file = new File (cfgDir, "sample-types.txt");
+            if(file.exists()) {
+                String line;
+                BufferedReader buf = new BufferedReader(new FileReader(file));
+                while ((line = buf.readLine()) != null) {
+                    sampleTypes.add(line);
+                }
+                buf.close();
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sampleTypes);
+                etNextSampleType.setAdapter(adapter);
+            }
 
             // Load preferences
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -247,7 +270,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     return;
                 }
 
-                File file = new File (appDir, tvProjName.getText().toString() + ".txt");
+                File file = new File (projDir, tvProjName.getText().toString() + ".txt");
                 FileOutputStream out = new FileOutputStream(file, true);
 
                 TimeZone tz = TimeZone.getTimeZone("UTC");
@@ -282,8 +305,14 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             tvProjName.setText(String.valueOf(parent.getItemAtPosition(position)));
 
+            if(dataId.trim().length() < 1)
+            {
+                Toast.makeText(SampleRegistrationActivity.this, ErrorString("You must add a Phone ID under settings"), Toast.LENGTH_LONG).show();
+                return;
+            }
+
             try {
-                LineNumberReader lnr = new LineNumberReader(new FileReader(new File(appDir, tvProjName.getText().toString() + ".txt")));
+                LineNumberReader lnr = new LineNumberReader(new FileReader(new File(projDir, tvProjName.getText().toString() + ".txt")));
                 lnr.skip(Long.MAX_VALUE);
                 nextId = lnr.getLineNumber();
                 lnr.close();
@@ -317,7 +346,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     }
                 }
 
-                File file = new File (appDir, strNewProj + ".txt");
+                File file = new File (projDir, strNewProj + ".txt");
                 try {
                     FileOutputStream out = new FileOutputStream(file);
                     String  strUID = UUID.randomUUID().toString() + "\n";
@@ -404,15 +433,21 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         return false;
     }
 
-    public File getStorageDir(String appname) {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), appname);
+    public File getProjectDir() {
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "sampleregistration/projects");
+        file.mkdirs();
+        return file;
+    }
+
+    public File getConfigDir() {
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "sampleregistration/config");
         file.mkdirs();
         return file;
     }
 
     public void populateProjects() {
         items.clear();
-        File[] listOfFiles = appDir.listFiles();
+        File[] listOfFiles = projDir.listFiles();
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 int pos = file.getName().lastIndexOf(".");
