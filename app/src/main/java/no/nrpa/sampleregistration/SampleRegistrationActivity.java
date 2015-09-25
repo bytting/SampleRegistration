@@ -321,7 +321,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 out.flush();
                 out.close();
 
-                Toast.makeText(SampleRegistrationActivity.this, "Sample ID " + nextID + " stored as " + sampleType, Toast.LENGTH_LONG).show();
+                Toast.makeText(SampleRegistrationActivity.this, "ID " + dataID + " " + nextID + " stored as " + sampleType, Toast.LENGTH_LONG).show();
 
                 nextId++;
                 tvNextID.setText(String.valueOf(nextId));

@@ -148,23 +148,24 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:editable="false"
                         android:textColor="#073642"
-                        android:text="Phone ID: "
+                        android:text="ID:"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:editable="false"
                         android:textColor="#073642"
-                        android:textColorHint="#93a1a1"
-                        android:hint="Phone ID"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/tvDataId"/>
 
@@ -173,16 +174,6 @@
                         android:layout_height="wrap_content"
                         android:editable="false"
                         android:textColor="#073642"
-                        android:text="Sample ID: "
-                        android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:textColor="#073642"
-                        android:textColorHint="#93a1a1"
-                        android:hint="Next ID"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/tvNextId"/>
                 </LinearLayout>
@@ -190,25 +181,15 @@
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:singleLine="true"
                     android:maxLength="64"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
                     android:hint="Sample type"
                     android:imeOptions="actionNext"
-                    android:id="@+id/etNextSampleType"/>
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:maxLength="64"
-                    android:minWidth="100dp"
-                    android:textColor="#073642"
-                    android:textColorHint="#93a1a1"
-                    android:hint="Station"
                     android:nextFocusDown="@+id/etMeasurementValue"
-                    android:id="@+id/etStation"/>
+                    android:id="@+id/etNextSampleType"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -218,9 +199,9 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:singleLine="true"
                         android:maxLength="64"
-                        android:minWidth="100dp"
                         android:textColor="#073642"
                         android:textColorHint="#93a1a1"
                         android:hint="Value"
@@ -230,9 +211,9 @@
                     <AutoCompleteTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:singleLine="true"
                         android:maxLength="64"
-                        android:minWidth="100dp"
                         android:textColor="#073642"
                         android:textColorHint="#93a1a1"
                         android:hint="Unit"
@@ -241,7 +222,18 @@
                 </LinearLayout>
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:maxLength="64"
+                    android:minWidth="100dp"
+                    android:textColor="#073642"
+                    android:textColorHint="#93a1a1"
+                    android:hint="Station"
+                    android:id="@+id/etStation"/>
+
+                <EditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:maxLength="128"
