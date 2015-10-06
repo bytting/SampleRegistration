@@ -304,7 +304,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     try {
                         fValue = Float.parseFloat(value);
                     } catch (NumberFormatException ex) {
-                        Toast.makeText(SampleRegistrationActivity.this, ErrorString("Invalid format on value"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SampleRegistrationActivity.this, ErrorString("Invalid value format"), Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -452,6 +452,9 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
     @Override
     public void onLocationChanged(Location location) {
+
+        if(location.getAccuracy() > 150f)
+            return;
 
         accuracy = location.getAccuracy();
         tvCurrAcc.setText("Acc: " + String.valueOf(accuracy) + "m");

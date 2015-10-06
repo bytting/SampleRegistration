@@ -78,10 +78,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:editable="false"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#2aa198"
                     android:hint="@string/provider_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900"
+                    android:textColor="#2aa198"
                     android:id="@+id/tvCurrentProvider"/>
 
                 <TextView
@@ -89,9 +89,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:editable="false"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#2aa198"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900"
+                    android:textColor="#2aa198"
                     android:id="@+id/tvCurrentFix"/>
 
                 <TextView
@@ -99,9 +99,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:editable="false"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#2aa198"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900"
+                    android:textColor="#2aa198"
                     android:id="@+id/tvCurrentAcc"/>
 
             </LinearLayout>
@@ -110,10 +110,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:editable="false"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#2aa198"
                     android:hint="@string/last_gps_date_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900"
+                    android:textColor="#2aa198"
                     android:id="@+id/tvLastDate"/>
 
             <LinearLayout
@@ -128,16 +128,16 @@
                     android:layout_marginRight="5dp"
                     android:text="@string/latitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900" />
+                    android:textColor="#2aa198" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:editable="false"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#2aa198"
                     android:hint="@string/last_gps_latitude_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900"
+                    android:textColor="#2aa198"
                     android:id="@+id/tvCurrentLatitude"/>
             </LinearLayout>
 
@@ -153,16 +153,16 @@
                     android:editable="false"
                     android:text="@string/longitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900" />
+                    android:textColor="#2aa198" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:editable="false"
-                    android:textColorHint="#859900"
+                    android:textColorHint="#2aa198"
                     android:hint="@string/last_gps_longitude_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#859900"
+                    android:textColor="#2aa198"
                     android:id="@+id/tvCurrentLongitude"/>
             </LinearLayout>
 
