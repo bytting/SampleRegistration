@@ -4,12 +4,12 @@
     <string name="new_project">Create new project</string>
     <string name="project_name">Project name</string>
     <string name="last_gps_information_received">Last GPS information received</string>
-    <string name="provider_not_available">Provider not available</string>
-    <string name="last_gps_date_not_available">Last GPS date not available</string>
+    <string name="provider_not_available">NA</string>
+    <string name="last_gps_date_not_available">NA</string>
     <string name="latitude">Latitude</string>
-    <string name="last_gps_latitude_not_available">Last GPS latitude not available</string>
+    <string name="last_gps_latitude_not_available">NA</string>
     <string name="longitude">Longitude</string>
-    <string name="last_gps_longitude_not_available">Last GPS longitude not available</string>
+    <string name="last_gps_longitude_not_available">NA</string>
     <string name="next_sample_information">Next sample information</string>
     <string name="id">ID</string>
     <string name="sample_type">Sample type</string>

@@ -18,6 +18,8 @@ package no.nrpa.sampleregistration;
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
@@ -71,7 +73,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private LocationManager locManager;
     private String locProvider;
     private boolean providerEnabled;
-    private TextView tvProjName, tvCurrProvider, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvDataID, tvNextID;
+    private TextView tvProjName, tvCurrProvider, tvCurrFix, tvCurrAcc, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvDataID, tvNextID;
     private EditText etStation, etMeasurementValue, etNextComment;
     private AutoCompleteTextView etNextSampleType, etMeasurementUnit;
     private File projDir, cfgDir;
@@ -79,6 +81,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private String dataId;
     private long syncFrequency;
     private float syncDistance;
+    private int nSatellites;
+    private float accuracy;
 
     private Spanned ErrorString(String s) {
         return Html.fromHtml("<font color='#ff8888' ><b>" + s + "</b></font>");
@@ -131,6 +135,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
             tvProjName = (TextView) findViewById(R.id.tvProjName);
             tvCurrProvider = (TextView) findViewById(R.id.tvCurrentProvider);
+            tvCurrFix = (TextView) findViewById(R.id.tvCurrentFix);
+            tvCurrAcc = (TextView) findViewById(R.id.tvCurrentAcc);
             tvCurrGPSDate = (TextView) findViewById(R.id.tvLastDate);
             tvCurrLat = (TextView) findViewById(R.id.tvCurrentLatitude);
             tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
@@ -181,6 +187,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             //Toast.makeText(this, "Sync freq: " + Long.toString(syncFrequency) + " Sync dist: " + Float.toString(syncDistance), Toast.LENGTH_SHORT).show();
 
             tvDataID.setText(dataId);
+            nSatellites = 0;
+            accuracy = 0f;
 
             // Initialize location manager
             locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -198,8 +206,9 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 return;
             }
 
-            Location location = locManager.getLastKnownLocation(locProvider);
+            locManager.addGpsStatusListener(gpsStatusListener);
 
+            Location location = locManager.getLastKnownLocation(locProvider);
             if (location != null) {
                 tvCurrProvider.setText("Provider: " + locProvider);
                 onLocationChanged(location);
@@ -305,7 +314,10 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     }
                 }
                 String sampleComment = etNextComment.getText().toString().trim();
-                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + sampleComment + "\n";
+                String nSats = String.valueOf(nSatellites);
+                String nAcc = String.valueOf(accuracy);
+
+                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + nSats + "|" + nAcc + "|" + sampleComment + "\n";
 
                 File file = new File (projDir, tvProjName.getText().toString() + ".txt");
                 FileOutputStream out = new FileOutputStream(file, true);
@@ -390,6 +402,22 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         }
     };
 
+    GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
+        @Override
+        public void onGpsStatusChanged(int event) {
+            if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS || event == GpsStatus.GPS_EVENT_FIRST_FIX) {
+                GpsStatus status = locManager.getGpsStatus(null);
+                Iterable<GpsSatellite> sats = status.getSatellites();
+                nSatellites = 0;
+                for (GpsSatellite sat : sats) {
+                    if(sat.usedInFix())
+                        nSatellites++;
+                }
+                tvCurrFix.setText("Sats: " + String.valueOf(nSatellites));
+            }
+        }
+    };
+
     /* Request updates at startup */
     @Override
     protected void onResume() {
@@ -424,6 +452,10 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
     @Override
     public void onLocationChanged(Location location) {
+
+        accuracy = location.getAccuracy();
+        tvCurrAcc.setText("Acc: " + String.valueOf(accuracy) + "m");
+
         Date now = new Date();
         double lat = (double) (location.getLatitude());
         double lng = (double) (location.getLongitude());
@@ -436,7 +468,6 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
