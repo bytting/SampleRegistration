@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:editable="false"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Create new project"/>
+                android:text="@string/new_project"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                 android:maxLength="64"
                 android:textColor="#073642"
                 android:textColorHint="#93a1a1"
-                android:hint="Project name"
+                android:hint="@string/project_name"
                 android:id="@+id/etNewProj"/>
 
             <ListView
@@ -66,14 +66,14 @@
                     android:layout_marginTop="8dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0054BB"
-                    android:text="Last GPS information received"/>
+                    android:text="@string/last_gps_information_received"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:textColorHint="#859900"
-                    android:hint="Current location provider"
+                    android:hint="@string/provider_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#859900"
                     android:id="@+id/tvCurrentProvider"/>
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:textColorHint="#859900"
-                    android:hint="Last GPS date"
+                    android:hint="@string/last_gps_date_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#859900"
                     android:id="@+id/tvLastDate"/>
@@ -97,7 +97,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:editable="false"
-                    android:text="Latitude: "
+                    android:layout_marginRight="5dp"
+                    android:text="@string/latitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#859900" />
 
@@ -106,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:textColorHint="#859900"
-                    android:hint="Last GPS latitude"
+                    android:hint="@string/last_gps_latitude_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#859900"
                     android:id="@+id/tvCurrentLatitude"/>
@@ -120,8 +121,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:editable="false"
-                    android:text="Longitude: "
+                    android:text="@string/longitude"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#859900" />
 
@@ -130,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:editable="false"
                     android:textColorHint="#859900"
-                    android:hint="Last GPS longitude"
+                    android:hint="@string/last_gps_longitude_not_available"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#859900"
                     android:id="@+id/tvCurrentLongitude"/>
@@ -143,7 +145,7 @@
                     android:editable="false"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0054BB"
-                    android:text="Next sample information"/>
+                    android:text="@string/next_sample_information"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -157,7 +159,7 @@
                         android:layout_marginRight="5dp"
                         android:editable="false"
                         android:textColor="#073642"
-                        android:text="ID:"
+                        android:text="@string/id"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
@@ -186,7 +188,7 @@
                     android:maxLength="64"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
-                    android:hint="Sample type"
+                    android:hint="@string/sample_type"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/etMeasurementValue"
                     android:id="@+id/etNextSampleType"/>
@@ -204,7 +206,7 @@
                         android:maxLength="64"
                         android:textColor="#073642"
                         android:textColorHint="#93a1a1"
-                        android:hint="Value"
+                        android:hint="@string/value"
                         android:nextFocusDown="@+id/etMeasurementUnit"
                         android:id="@+id/etMeasurementValue"/>
 
@@ -216,7 +218,7 @@
                         android:maxLength="64"
                         android:textColor="#073642"
                         android:textColorHint="#93a1a1"
-                        android:hint="Unit"
+                        android:hint="@string/unit"
                         android:imeOptions="actionNext"
                         android:id="@+id/etMeasurementUnit"/>
                 </LinearLayout>
@@ -229,7 +231,7 @@
                     android:minWidth="100dp"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
-                    android:hint="Station"
+                    android:hint="@string/station"
                     android:id="@+id/etStation"/>
 
                 <EditText
@@ -240,7 +242,7 @@
                     android:minWidth="100dp"
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
-                    android:hint="Comment"
+                    android:hint="@string/comment"
                     android:id="@+id/etNextComment"/>
             </LinearLayout>
 
@@ -249,14 +251,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
                 android:id="@+id/btnBack"
-                android:text="Back"/>
+                android:text="@string/back"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:id="@+id/btnNextId"
-                android:text="Store next sample"/>
+                android:text="@string/store_next_sample"/>
         </FrameLayout>
     </ViewSwitcher>
 </RelativeLayout>

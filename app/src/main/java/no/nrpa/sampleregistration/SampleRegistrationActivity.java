@@ -84,10 +84,6 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         return Html.fromHtml("<font color='#ff8888' ><b>" + s + "</b></font>");
     }
 
-    private static final String[] COUNTRIES = new String[] {
-            "Belgium", "France", "Italy", "Germany", "Spain"
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,11 +203,6 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             if (location != null) {
                 tvCurrProvider.setText("Provider: " + locProvider);
                 onLocationChanged(location);
-            } else {
-                tvCurrProvider.setText("Provider not available");
-                tvCurrGPSDate.setText("Date not available");
-                tvCurrLat.setText("Location not available");
-                tvCurrLon.setText("Location not available");
             }
         } catch(SecurityException ex) {
             Toast.makeText(SampleRegistrationActivity.this, ErrorString(ex.getMessage()), Toast.LENGTH_LONG).show();
@@ -292,6 +283,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 df.setTimeZone(tz);
                 String strDateISO = df.format(new Date());
 
+                String projName = tvProjName.getText().toString();
                 String currLat = tvCurrLat.getText().toString().trim();
                 String currLon = tvCurrLon.getText().toString().trim();
                 String dataID = tvDataID.getText().toString().trim();
@@ -313,7 +305,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                     }
                 }
                 String sampleComment = etNextComment.getText().toString().trim();
-                String line = dataID + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + sampleComment + "\n";
+                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + sampleComment + "\n";
 
                 File file = new File (projDir, tvProjName.getText().toString() + ".txt");
                 FileOutputStream out = new FileOutputStream(file, true);
@@ -454,7 +446,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
     @Override
     public void onProviderDisabled(String provider) {
-        tvCurrProvider.setText("Provider not available");
+        tvCurrProvider.setText("");
     }
 
     public boolean isExternalStorageWritable() {

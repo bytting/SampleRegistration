@@ -135,6 +135,6 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected boolean isValidFragment (String fragmentName) {
-        return true;
+        return DataSyncPreferenceFragment.class.getName().equals(fragmentName) || DataIdPreferenceFragment.class.getName().equals(fragmentName);
     }
 }
