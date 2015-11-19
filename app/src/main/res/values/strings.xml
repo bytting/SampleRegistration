@@ -11,7 +11,7 @@
     <string name="longitude">Longitude</string>
     <string name="last_gps_longitude_not_available">NA</string>
     <string name="next_sample_information">Next sample information</string>
-    <string name="id">ID</string>
+    <string name="id">ID:</string>
     <string name="sample_type">Sample type</string>
     <string name="value">Value</string>
     <string name="unit">Unit</string>
@@ -19,4 +19,6 @@
     <string name="comment">Comment</string>
     <string name="back">Back</string>
     <string name="store_next_sample">Store next sample</string>
+    <string name="altitude_not_available">NA</string>
+    <string name="altitude">Altitude (WGS84)</string>
 </resources>

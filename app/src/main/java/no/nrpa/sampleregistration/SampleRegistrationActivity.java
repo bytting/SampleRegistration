@@ -73,7 +73,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private LocationManager locManager;
     private String locProvider;
     private boolean providerEnabled;
-    private TextView tvProjName, tvCurrProvider, tvCurrFix, tvCurrAcc, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvDataID, tvNextID;
+    private TextView tvProjName, tvCurrProvider, tvCurrFix, tvCurrAcc, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvCurrAltitude, tvDataID, tvNextID;
     private EditText etStation, etMeasurementValue, etNextComment;
     private AutoCompleteTextView etNextSampleType, etMeasurementUnit;
     private File projDir, cfgDir;
@@ -140,6 +140,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             tvCurrGPSDate = (TextView) findViewById(R.id.tvLastDate);
             tvCurrLat = (TextView) findViewById(R.id.tvCurrentLatitude);
             tvCurrLon = (TextView) findViewById(R.id.tvCurrentLongitude);
+            tvCurrAltitude = (TextView) findViewById(R.id.tvCurrentAltitude);
             tvDataID = (TextView)findViewById(R.id.tvDataId);
             tvNextID = (TextView)findViewById(R.id.tvNextId);
             etNextSampleType = (AutoCompleteTextView)findViewById(R.id.etNextSampleType);
@@ -295,6 +296,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 String projName = tvProjName.getText().toString();
                 String currLat = tvCurrLat.getText().toString().trim();
                 String currLon = tvCurrLon.getText().toString().trim();
+                String altitude = tvCurrAltitude.getText().toString().trim();
                 String dataID = tvDataID.getText().toString().trim();
                 String nextID = tvNextID.getText().toString().trim();
                 String station = etStation.getText().toString().trim();
@@ -317,7 +319,7 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 String nSats = String.valueOf(nSatellites);
                 String nAcc = String.valueOf(accuracy);
 
-                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + nSats + "|" + nAcc + "|" + sampleComment + "\n";
+                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + altitude + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + nSats + "|" + nAcc + "|" + sampleComment + "\n";
 
                 File file = new File (projDir, tvProjName.getText().toString() + ".txt");
                 FileOutputStream out = new FileOutputStream(file, true);
@@ -453,11 +455,15 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     @Override
     public void onLocationChanged(Location location) {
 
-        if(location.getAccuracy() > 150f)
-            return;
+        if(location.hasAltitude()) {
+            double alt = location.getAltitude();
+            tvCurrAltitude.setText(String.valueOf(alt));
+        }
 
-        accuracy = location.getAccuracy();
-        tvCurrAcc.setText("Acc: " + String.valueOf(accuracy) + "m");
+        if(location.hasAccuracy()) {
+            accuracy = location.getAccuracy();
+            tvCurrAcc.setText("Acc: " + String.valueOf(accuracy) + "m");
+        }
 
         Date now = new Date();
         double lat = (double) (location.getLatitude());

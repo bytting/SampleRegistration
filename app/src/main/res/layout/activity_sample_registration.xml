@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:editable="false"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/new_project"/>
+                android:text="@string/new_project" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -33,12 +33,12 @@
                 android:textColor="#073642"
                 android:textColorHint="#93a1a1"
                 android:hint="@string/project_name"
-                android:id="@+id/etNewProj"/>
+                android:id="@+id/etNewProj" />
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/listView"/>
+                android:id="@+id/listView" />
         </LinearLayout>
 
         <FrameLayout
@@ -57,7 +57,7 @@
                     android:editable="false"
                     android:textColor="#073642"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/tvProjName"/>
+                    android:id="@+id/tvProjName" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -66,45 +66,45 @@
                     android:layout_marginTop="8dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0054BB"
-                    android:text="@string/last_gps_information_received"/>
+                    android:text="@string/last_gps_information_received" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:editable="false"
-                    android:textColorHint="#2aa198"
-                    android:hint="@string/provider_not_available"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198"
-                    android:id="@+id/tvCurrentProvider"/>
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:editable="false"
-                    android:textColorHint="#2aa198"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198"
-                    android:id="@+id/tvCurrentFix"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:editable="false"
+                        android:textColorHint="#2aa198"
+                        android:hint="@string/provider_not_available"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198"
+                        android:id="@+id/tvCurrentProvider" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:editable="false"
-                    android:textColorHint="#2aa198"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198"
-                    android:id="@+id/tvCurrentAcc"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:editable="false"
+                        android:textColorHint="#2aa198"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198"
+                        android:id="@+id/tvCurrentFix" />
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:editable="false"
+                        android:textColorHint="#2aa198"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198"
+                        android:id="@+id/tvCurrentAcc" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -112,59 +112,84 @@
                     android:editable="false"
                     android:textColorHint="#2aa198"
                     android:hint="@string/last_gps_date_not_available"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#2aa198"
-                    android:id="@+id/tvLastDate"/>
+                    android:id="@+id/tvLastDate" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/latitude"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/latitude"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColorHint="#2aa198"
+                        android:hint="@string/last_gps_latitude_not_available"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198"
+                        android:id="@+id/tvCurrentLatitude" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:textColorHint="#2aa198"
-                    android:hint="@string/last_gps_latitude_not_available"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198"
-                    android:id="@+id/tvCurrentLatitude"/>
-            </LinearLayout>
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:editable="false"
+                        android:text="@string/longitude"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColorHint="#2aa198"
+                        android:hint="@string/last_gps_longitude_not_available"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198"
+                        android:id="@+id/tvCurrentLongitude" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:editable="false"
-                    android:text="@string/longitude"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:textColorHint="#2aa198"
-                    android:hint="@string/last_gps_longitude_not_available"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#2aa198"
-                    android:id="@+id/tvCurrentLongitude"/>
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:editable="false"
+                        android:text="@string/altitude"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColorHint="#2aa198"
+                        android:hint="@string/altitude_not_available"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#2aa198"
+                        android:id="@+id/tvCurrentAltitude" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -173,7 +198,7 @@
                     android:editable="false"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0054BB"
-                    android:text="@string/next_sample_information"/>
+                    android:text="@string/next_sample_information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -188,7 +213,7 @@
                         android:editable="false"
                         android:textColor="#073642"
                         android:text="@string/id"
-                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -197,7 +222,7 @@
                         android:editable="false"
                         android:textColor="#073642"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/tvDataId"/>
+                        android:id="@+id/tvDataId" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -205,7 +230,7 @@
                         android:editable="false"
                         android:textColor="#073642"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/tvNextId"/>
+                        android:id="@+id/tvNextId" />
                 </LinearLayout>
 
                 <AutoCompleteTextView
@@ -219,7 +244,7 @@
                     android:hint="@string/sample_type"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/etMeasurementValue"
-                    android:id="@+id/etNextSampleType"/>
+                    android:id="@+id/etNextSampleType" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -236,7 +261,7 @@
                         android:textColorHint="#93a1a1"
                         android:hint="@string/value"
                         android:nextFocusDown="@+id/etMeasurementUnit"
-                        android:id="@+id/etMeasurementValue"/>
+                        android:id="@+id/etMeasurementValue" />
 
                     <AutoCompleteTextView
                         android:layout_width="wrap_content"
@@ -248,7 +273,7 @@
                         android:textColorHint="#93a1a1"
                         android:hint="@string/unit"
                         android:imeOptions="actionNext"
-                        android:id="@+id/etMeasurementUnit"/>
+                        android:id="@+id/etMeasurementUnit" />
                 </LinearLayout>
 
                 <EditText
@@ -260,7 +285,7 @@
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
                     android:hint="@string/station"
-                    android:id="@+id/etStation"/>
+                    android:id="@+id/etStation" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -271,7 +296,7 @@
                     android:textColor="#073642"
                     android:textColorHint="#93a1a1"
                     android:hint="@string/comment"
-                    android:id="@+id/etNextComment"/>
+                    android:id="@+id/etNextComment" />
             </LinearLayout>
 
             <Button
@@ -279,14 +304,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
                 android:id="@+id/btnBack"
-                android:text="@string/back"/>
+                android:text="@string/back" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:id="@+id/btnNextId"
-                android:text="@string/store_next_sample"/>
+                android:text="@string/store_next_sample" />
         </FrameLayout>
     </ViewSwitcher>
 </RelativeLayout>
