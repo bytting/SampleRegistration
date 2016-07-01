@@ -20,8 +20,8 @@ The units.txt file should have one unit per line.
 
 ## Screenshots
 
-![sampleregistration03](https://cloud.githubusercontent.com/assets/1276717/16519096/0c38612e-3f87-11e6-9308-5a969ae5f9d9.png)
+![sampleregistration003](https://cloud.githubusercontent.com/assets/1276717/16519246/da2a85da-3f87-11e6-9e5d-6a318ec7e31f.png)
 
-![sampleregistration01](https://cloud.githubusercontent.com/assets/1276717/16519100/124e72b0-3f87-11e6-9eb5-94bfc3baec3b.png)
+![sampleregistration001](https://cloud.githubusercontent.com/assets/1276717/16519252/df8df994-3f87-11e6-9bdf-5e0d38295050.png)
 
-![sampleregistration02](https://cloud.githubusercontent.com/assets/1276717/16519105/15ccc266-3f87-11e6-94b8-d828742e5b30.png)
+![sampleregistration002](https://cloud.githubusercontent.com/assets/1276717/16519255/e2c64bb6-3f87-11e6-9899-a680993c5d87.png)
