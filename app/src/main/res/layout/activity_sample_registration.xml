@@ -46,18 +46,39 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <ScrollView
+                android:id="@+id/svSamples"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:textColor="#073642"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/tvProjName" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColor="#073642"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:id="@+id/tvProjName" />
+
+                    <Button
+                        android:id="@+id/btnEditSample"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:textColor="#0000FF"
+                        android:text="@string/edit_sample" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -231,6 +252,14 @@
                         android:textColor="#073642"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/tvNextId" />
+
+                    <TextView
+                        android:id="@+id/tvEditing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:textColor="#073642" />
+
                 </LinearLayout>
 
                 <AutoCompleteTextView
@@ -297,21 +326,30 @@
                     android:textColorHint="#93a1a1"
                     android:hint="@string/comment"
                     android:id="@+id/etNextComment" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|left"
+                        android:id="@+id/btnBack"
+                        android:text="@string/back" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:id="@+id/btnNextId"
+                        android:text="@string/store_next_sample" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
-                android:id="@+id/btnBack"
-                android:text="@string/back" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:id="@+id/btnNextId"
-                android:text="@string/store_next_sample" />
+            </ScrollView>
         </FrameLayout>
     </ViewSwitcher>
 </RelativeLayout>

@@ -16,6 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package no.nrpa.sampleregistration;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.GpsSatellite;
@@ -48,34 +50,42 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
 public class SampleRegistrationActivity extends AppCompatActivity implements LocationListener {
 
+    private String newLine = System.getProperty("line.separator");
+
     private ViewSwitcher switcher;
+    private Button btnBack, btnNextId, btnEditSample;
     private ListView lstProj;
     private ArrayList<String> items;
     private ListAdapter adapter;
     private LocationManager locManager;
     private String locProvider;
     private boolean providerEnabled;
-    private TextView tvProjName, tvCurrProvider, tvCurrFix, tvCurrAcc, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvCurrAltitude, tvDataID, tvNextID;
+    private TextView tvProjName, tvCurrProvider, tvCurrFix, tvCurrAcc, tvCurrGPSDate, tvCurrLat, tvCurrLon, tvCurrAltitude, tvDataID, tvNextID, tvEditing;
     private EditText etStation, etMeasurementValue, etNextComment;
     private AutoCompleteTextView etNextSampleType, etMeasurementUnit;
+    private ScrollView svSamples;
     private File projDir, cfgDir;
     private int nextId;
     private String dataId;
@@ -83,6 +93,9 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
     private float syncDistance;
     private int nSatellites;
     private float accuracy;
+    private boolean modCoords = false;
+    private int editIndex = -1;
+    private List<String> editSampleArray = new ArrayList<String>();
 
     private Spanned ErrorString(String s) {
         return Html.fromHtml("<font color='#ff8888' ><b>" + s + "</b></font>");
@@ -112,6 +125,8 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
             projDir = getProjectDir();
             cfgDir = getConfigDir();
 
+            svSamples = (ScrollView)findViewById(R.id.svSamples);
+
             switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher);
             switcher.setInAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_in_left));
             switcher.setOutAnimation(AnimationUtils.loadAnimation(SampleRegistrationActivity.this, android.R.anim.slide_out_right));
@@ -127,11 +142,17 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
 
             populateProjects();
 
-            Button btnBack = (Button) findViewById(R.id.btnBack);
+            btnBack = (Button) findViewById(R.id.btnBack);
             btnBack.setOnClickListener(btnBack_onClick);
 
-            Button btnNextID = (Button) findViewById(R.id.btnNextId);
-            btnNextID.setOnClickListener(btnNextID_onClick);
+            btnNextId = (Button) findViewById(R.id.btnNextId);
+            btnNextId.setOnClickListener(btnNextID_onClick);
+
+            btnEditSample = (Button) findViewById(R.id.btnEditSample);
+            btnEditSample.setOnClickListener(btnEditSample_onClick);
+
+            tvEditing = (TextView)findViewById(R.id.tvEditing);
+            tvEditing.setText("");
 
             tvProjName = (TextView) findViewById(R.id.tvProjName);
             tvCurrProvider = (TextView) findViewById(R.id.tvCurrentProvider);
@@ -268,9 +289,105 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
         }
     };
 
+    private View.OnClickListener btnEditSample_onClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            editIndex = -1;
+
+            File file = new File (projDir, tvProjName.getText().toString() + ".txt");
+            if(!file.exists())
+                return;
+
+            String line;
+            BufferedReader buf = null;
+            editSampleArray.clear();
+
+            try {
+
+                buf = new BufferedReader(new FileReader(file));
+                buf.readLine();
+                while ((line = buf.readLine()) != null) {
+                    String l = line.trim();
+                    if (l.isEmpty())
+                        continue;
+                    editSampleArray.add(l);
+                }
+                buf.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
+            String[] samples = new String[editSampleArray.size()];
+            for(int i=0; i<editSampleArray.size(); i++)
+            {
+                String[] parts = editSampleArray.get(i).split("\\|", -1);
+                samples[i] = parts[2] + " - " + parts[8];
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(SampleRegistrationActivity.this);
+            builder.setTitle(R.string.select_sample_for_edit).setItems(samples, selectSampleListener);
+            builder.show();
+        }
+    };
+
+    DialogInterface.OnClickListener selectSampleListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+            editIndex = which;
+            String[] parts = editSampleArray.get(which).split("\\|", -1);
+
+            if(parts.length < 14)
+            {
+                Toast.makeText(SampleRegistrationActivity.this, ErrorString("Wrong number of elements in log file"), Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            tvDataID.setText(parts[0]);
+            tvNextID.setText(parts[2]);
+            etNextSampleType.setText(parts[8]);
+            etNextComment.setText(parts[13]);
+
+            btnBack.setText(R.string.cancel);
+            btnNextId.setText(R.string.update);
+            tvEditing.setText(" (redigering...)");
+
+            //Toast.makeText(SampleRegistrationActivity.this, "Prøve valgt: " + parts[1] + " - " + parts[9], Toast.LENGTH_LONG).show();
+
+            AlertDialog.Builder yesNoDiag = new AlertDialog.Builder(SampleRegistrationActivity.this);
+            yesNoDiag.setMessage("Update coordinates as well?");
+            yesNoDiag.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    modCoords = true;
+                }
+            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    modCoords = false;
+                }
+            });
+            yesNoDiag.show();
+        }
+    };
+
     private View.OnClickListener btnBack_onClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            btnBack.setText(R.string.back);
+            btnNextId.setText(R.string.store_next_sample);
+            tvEditing.setText("");
+            etNextSampleType.setText("");
+
+            if(editIndex != -1) {
+                editIndex = -1;
+                tvNextID.setText(String.valueOf(nextId));
+                return;
+            }
+
+            editIndex = -1;
             switcher.showPrevious();
         }
     };
@@ -319,18 +436,64 @@ public class SampleRegistrationActivity extends AppCompatActivity implements Loc
                 String nSats = String.valueOf(nSatellites);
                 String nAcc = String.valueOf(accuracy);
 
-                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + altitude + "|" + station + "|" + sampleType + "|" + value + "|" + unit + "|" + nSats + "|" + nAcc + "|" + sampleComment + "\n";
+                String line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + currLat + "|" + currLon + "|" + altitude + "|"
+                        + station + "|" + sampleType + "|" + value + "|" + unit + "|" + nSats + "|" + nAcc + "|" + sampleComment + "\n";
 
-                File file = new File (projDir, tvProjName.getText().toString() + ".txt");
-                FileOutputStream out = new FileOutputStream(file, true);
-                out.write(line.getBytes());
-                out.flush();
-                out.close();
+                if(editIndex == -1) {
+                    File file = new File(projDir, tvProjName.getText().toString() + ".txt");
+                    FileOutputStream out = new FileOutputStream(file, true);
+                    out.write(line.getBytes());
+                    out.flush();
+                    out.close();
+                    Toast.makeText(SampleRegistrationActivity.this, "ID " + dataID + " " + nextID + " stored as " + sampleType, Toast.LENGTH_LONG).show();
+                    nextId++;
+                }
+                else {
+                    String filename = tvProjName.getText().toString() + ".txt";
+                    String newFilename = tvProjName.getText().toString() + "_new.txt";
 
-                Toast.makeText(SampleRegistrationActivity.this, "ID " + dataID + " " + nextID + " stored as " + sampleType, Toast.LENGTH_LONG).show();
+                    File file = new File(projDir, filename);
+                    File newFile = new File(projDir, newFilename);
 
-                nextId++;
+                    int idx = 0;
+                    String l;
+                    BufferedReader rd = new BufferedReader(new FileReader(file));
+                    BufferedWriter wr = new BufferedWriter(new FileWriter(newFile));
+                    while ((l = rd.readLine()) != null) {
+                        if(idx == editIndex + 1) {
+                            if(!modCoords) {
+                                String[] parts = l.split("\\|", -1);
+                                String modLat = parts[6];
+                                String modLon = parts[7];
+                                String modAlt = parts[8];
+
+                                line = dataID + "|" + projName + "|" + nextID + "|" + strDateISO + "|" + modLat + "|" + modLon + "|" + modAlt + "|"
+                                        + station + "|" + sampleType + "|" + value + "|" + unit + "|" + nSats + "|" + nAcc + "|" + sampleComment + newLine;
+                            }
+
+                            wr.write(line);
+                        }
+                        else {
+                            wr.write(l + newLine);
+                        }
+                        idx++;
+                    }
+                    rd.close();
+                    wr.close();
+
+                    file.delete();
+                    newFile.renameTo(file);
+
+                    Toast.makeText(SampleRegistrationActivity.this, "ID " + dataID + " " + nextID + " oppdatert", Toast.LENGTH_LONG).show();
+                    editIndex = -1;
+                    btnNextId.setText(R.string.store_next_sample);
+                    btnBack.setText(R.string.back);
+                    tvEditing.setText("");
+                }
+
                 tvNextID.setText(String.valueOf(nextId));
+                etNextSampleType.setText("");
+                svSamples.fullScroll(ScrollView.FOCUS_UP);
 
             } catch (Exception e) {
                 Toast.makeText(SampleRegistrationActivity.this, ErrorString(e.getMessage()), Toast.LENGTH_LONG).show();

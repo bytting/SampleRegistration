@@ -13,6 +13,7 @@
     <string name="next_sample_information">Next sample information</string>
     <string name="id">ID:</string>
     <string name="sample_type">Sample type</string>
+    <string name="edit_sample">Edit sample</string>
     <string name="value">Value</string>
     <string name="unit">Unit</string>
     <string name="station">Station</string>
@@ -20,5 +21,8 @@
     <string name="back">Back</string>
     <string name="store_next_sample">Store next sample</string>
     <string name="altitude_not_available">NA</string>
-    <string name="altitude">Altitude (WGS84)</string>
+    <string name="altitude">Altitude</string>
+    <string name="select_sample_for_edit">Select sample for editing</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
 </resources>
